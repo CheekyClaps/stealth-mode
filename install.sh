@@ -22,24 +22,31 @@ echo "Setting up Python virtual environment with system packages (for GTK/AppInd
 python3 -m venv --system-site-packages "$DIR/venv"
 "$DIR/venv/bin/pip" install -r "$DIR/requirements.txt"
 
-# 4. Create Desktop Entry for Autostart
-AUTOSTART_DIR="$HOME/.config/autostart"
-mkdir -p "$AUTOSTART_DIR"
-DESKTOP_FILE="$AUTOSTART_DIR/stealth-mode.desktop"
+# 4. Create Systemd User Service for robust autostart
+SERVICE_DIR="$HOME/.config/systemd/user"
+mkdir -p "$SERVICE_DIR"
+SERVICE_FILE="$SERVICE_DIR/stealth-mode.service"
 
-cat > "$DESKTOP_FILE" << EOF
-[Desktop Entry]
-Type=Application
-Name=Stealth Mode
-Comment=Toggle network stealth mode
-Exec=$DIR/venv/bin/python $DIR/main.py
-Terminal=false
-StartupNotify=false
-Categories=Utility;Network;
+echo "Setting up systemd user service..."
+cat > "$SERVICE_FILE" << EOF
+[Unit]
+Description=Stealth Mode Tray App
+After=graphical-session.target
+
+[Service]
+Type=simple
+Environment="PYSTRAY_BACKEND=appindicator"
+ExecStart=$DIR/venv/bin/python $DIR/main.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
 EOF
 
-chmod +x "$DESKTOP_FILE"
+systemctl --user daemon-reload
+systemctl --user enable --now stealth-mode.service
 
 echo "Installation complete!"
-echo "To start it now, run: $DIR/venv/bin/python $DIR/main.py"
-echo "It will also start automatically on your next login."
+echo "The Stealth Mode service is now running and will start automatically on login."
+echo "You can check its status with: systemctl --user status stealth-mode.service"
