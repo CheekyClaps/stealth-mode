@@ -18,8 +18,8 @@ EOF
 sudo chmod 0440 "$SUDOERS_FILE"
 
 # 3. Setup Python virtual environment (recommended for python tray apps)
-echo "Setting up Python virtual environment..."
-python3 -m venv "$DIR/venv"
+echo "Setting up Python virtual environment with system packages (for GTK/AppIndicator)..."
+python3 -m venv --system-site-packages "$DIR/venv"
 "$DIR/venv/bin/pip" install -r "$DIR/requirements.txt"
 
 # 4. Create Desktop Entry for Autostart
