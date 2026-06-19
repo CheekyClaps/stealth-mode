@@ -85,7 +85,6 @@ def main():
     )
     
     icon = pystray.Icon("stealth-mode", icon_image, "Stealth Mode", menu)
-    icon.visible = True
     
     # Run the tray icon application
     icon.run(setup)
