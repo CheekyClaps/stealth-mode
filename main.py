@@ -28,20 +28,33 @@ def get_status():
     return status == "stealth_on"
 
 def create_image(is_stealth):
-    """Generate an icon matching Cosmic UI style (flat, monochrome white/grey)."""
+    """Generate a 'Stealth/Spy' icon (Hat and Sunglasses)."""
     width = 64
     height = 64
     image = Image.new('RGBA', (width, height), (0, 0, 0, 0))
     draw = ImageDraw.Draw(image)
     
     if is_stealth:
-        # Active: Solid white shield or dot to indicate 'protected/silent'
-        draw.ellipse((12, 12, 52, 52), fill=(230, 230, 230, 255))
-        # Inner cut-out to make it look like a minimalist symbol
-        draw.ellipse((26, 26, 38, 38), fill=(0, 0, 0, 0)) # transparent center
+        # Active: Bright white
+        c = (240, 240, 240, 255)
     else:
-        # Inactive: Hollow white/grey circle indicating 'open'
-        draw.ellipse((12, 12, 52, 52), outline=(180, 180, 180, 200), width=6)
+        # Inactive: Greyed out / semi-transparent
+        c = (120, 120, 120, 150)
+        
+    # Draw Hat Top
+    draw.polygon([(20, 12), (44, 12), (46, 28), (18, 28)], fill=c)
+    
+    # Draw Hat Brim
+    draw.ellipse((10, 24, 54, 34), fill=c)
+    
+    # Draw Sunglasses Left Lens
+    draw.ellipse((16, 38, 30, 52), fill=c)
+    
+    # Draw Sunglasses Right Lens
+    draw.ellipse((34, 38, 48, 52), fill=c)
+    
+    # Draw Sunglasses Bridge
+    draw.rectangle((30, 42, 34, 46), fill=c)
         
     return image
 
