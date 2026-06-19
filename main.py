@@ -28,26 +28,20 @@ def get_status():
     return status == "stealth_on"
 
 def create_image(is_stealth):
-    """Generate an icon. Blue shield/dot for active (Stealth), Red for inactive."""
+    """Generate an icon matching Cosmic UI style (flat, monochrome white/grey)."""
     width = 64
     height = 64
     image = Image.new('RGBA', (width, height), (0, 0, 0, 0))
     draw = ImageDraw.Draw(image)
     
-    # Draw a circle. Color depends on state.
-    color = (0, 150, 255) if is_stealth else (255, 50, 50)
-    
-    # Outer circle
-    draw.ellipse((8, 8, 56, 56), fill=color, outline="white")
-    
-    # Inner visual indicator (just to make it look nicer)
     if is_stealth:
-        # Draw a little 'S' or lock shape (simplified as a smaller circle for now)
-        draw.ellipse((24, 24, 40, 40), fill="white")
+        # Active: Solid white shield or dot to indicate 'protected/silent'
+        draw.ellipse((12, 12, 52, 52), fill=(230, 230, 230, 255))
+        # Inner cut-out to make it look like a minimalist symbol
+        draw.ellipse((26, 26, 38, 38), fill=(0, 0, 0, 0)) # transparent center
     else:
-        # Draw an 'X' or open shape
-        draw.line((24, 24, 40, 40), fill="white", width=4)
-        draw.line((24, 40, 40, 24), fill="white", width=4)
+        # Inactive: Hollow white/grey circle indicating 'open'
+        draw.ellipse((12, 12, 52, 52), outline=(180, 180, 180, 200), width=6)
         
     return image
 
