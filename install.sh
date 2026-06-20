@@ -35,7 +35,6 @@ After=graphical-session.target
 
 [Service]
 Type=simple
-Environment="PYSTRAY_BACKEND=appindicator"
 ExecStart=$DIR/venv/bin/python $DIR/main.py
 Restart=on-failure
 RestartSec=5
